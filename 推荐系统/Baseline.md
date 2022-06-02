@@ -222,6 +222,7 @@ apply_async是异步非阻塞，指不用等待当前进程执行完毕，随时
 **命中率Hit Ratio(HR)**
 
 在top-K推荐中，HR是一种常用的衡量召回率的指标，计算公式为：
+
 $$
 HR@K = \frac{NumberOfHits@K}{GT}
 $$
@@ -244,6 +245,7 @@ def hit(gt_items, pred_items):
 **Normalized Discounted Cummulative Gain(NDCG)**
 
 推荐系统中**CG**表示将每个推荐结果相关性的分值累加后作为整个推荐列表的得分：
+
 $$
 CG_{k} = \sum_{i=1}^{k}rel_{i}
 $$
@@ -252,12 +254,14 @@ $$
 CG没有考虑每个推荐结果处于不同位置对整个推荐结果的影响，例如，我们总是希望相关性大大的结果排在前面，相关性低的排在前面会影响用户体验。
 
 **DCG**在CG的基础上引入了位置影响因素，计算公式如下：
+
 $$
 DCG_{k} = \sum_{i=1}^{k}\frac{2^{rel_{i}}-1}{log_{2}(i+1)}
 $$
 从上面的式子可以得出：1）推荐结果的相关性越大，DCG越大。2）相关性好的排在推荐列表前面的话，推荐效果越好，DCG越大。
 
 DCG针对不同的推荐列表之间很难进行横向评估，而我们评估一个推荐系统不可能仅使用一个用户的推荐列表及相应结果进行评估，而是对整个测试集中的用户及其推荐列表结果进行评估。那么，不同用户的推荐列表的评估分数就需要进行归一化，也就是**NDCG**,公式为：
+
 $$
 NDCG@k=\frac{DCG_{u}@k }{IDCG_{u}} \\
 NDCG@k=\frac{\sum _{u\in U}NDCG_{u}@k }{IDCG_{u}}
@@ -274,10 +278,12 @@ $$
 **1.Self-Attention Block**
 
 使用自注意力机制，定义如下：
+
 $$
 Attention(Q,K,V) = softmax(\frac{QK^{T}}{\sqrt{d}})V
 $$
 在本文中，对输入**E**通过**「线性投影」**转化为三个矩阵，并使用于上述注意力函数：
+
 $$
 S = SA(E) = Attention(EW^{Q},EW^{K},EW^{V})
 $$
@@ -296,6 +302,7 @@ $$
 ![image-20220309124817876](Baseline.assets/image-20220309124817876.png)
 
 作者为了解决过拟合问题，在注意力机制层和前馈网络层假如残差连接，Layer Normalizaiton，Dropout来一直模型的过拟合，这一点其实类似于Transformer
+
 $$
 g(x) = x + Dropout(g(LayerNorm(x)))\\
 其中：g(x)表示自注意力层与前馈神经网络

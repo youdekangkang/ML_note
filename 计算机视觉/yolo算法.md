@@ -17,6 +17,7 @@ YOLO意思是You Only Look Once，创造性的将候选区和对象识别这两�
 faster-rcnn中的先验框比例一般都是常规固定的，很明显这是一种空间换时间的方法，而且不一定都能够适合所有的算法
 
 yolo v2使用K-means聚类的方法找到最适合的anchor尺寸,使用定义的距离：
+
 $$
 d(bos,centroids) = 1 - IOU(box,centroids)
 $$
