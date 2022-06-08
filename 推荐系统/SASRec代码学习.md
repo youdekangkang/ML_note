@@ -35,3 +35,49 @@ numpy == 1.16.0
 
 ## 数据预处理
 
+输入的数据格式是二元组和(userID,itemID)这样的格式输入的，经过处理之后能够变成序列模式：
+
+```python
+def data_partition(fname):
+    usernum = 0
+    itemnum = 0
+    User = defaultdict(list)   # 最后输出的用户也是list类型的
+    user_train = {}
+    user_valid = {}
+    user_test = {}
+    # assume user/item index starting from 1
+    f = open('data/%s.txt' % fname, 'r')
+    for line in f:
+        u, i = line.rstrip().split(' ')
+        u = int(u)
+        i = int(i)
+        usernum = max(u, usernum)
+        itemnum = max(i, itemnum)
+        User[u].append(i)
+
+    # 构建测试集，训练集以及验证集
+    # 最后一个交互的物品作为测试集，倒数第二个交互的物品作为验证集，其他作为训练集
+    for user in User:
+        nfeedback = len(User[user])
+        # 如果用户序列太短，则不考虑把这个用户作为测试集
+        if nfeedback < 3:
+            user_train[user] = User[user]
+            user_valid[user] = []
+            user_test[user] = []
+        else:
+            user_train[user] = User[user][:-2]
+            user_valid[user] = []
+            user_valid[user].append(User[user][-2])
+            user_test[user] = []
+            user_test[user].append(User[user][-1])
+    return [user_train, user_valid, user_test, usernum, itemnum]
+```
+
+这里是处理之后的数据：
+
+![image-20220608164134716](SASRec代码学习.assets/image-20220608164134716.png)
+
+
+
+## 模型的实现
+
